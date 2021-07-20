@@ -1,0 +1,244 @@
+/**
+ * to-do list
+ */
+
+html {
+  height: 100%;
+}
+
+body {
+  margin:   0;
+  padding:  0;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  height:            70px;
+  background-color:  #24292F;
+  width:             100%;
+}
+
+.header .header__content {
+  width:      1080px;
+  margin:     auto;
+}
+
+.header .header__logo {
+  color:             white;
+  line-height:       70px;
+  font-size:         20px;
+  font-weight:       bold;
+}
+
+.footer {
+  background-color: lightgrey;
+  width:            100%;
+  padding:          12px 0px;
+}
+
+.footer .footer__content {
+  width:      1080px;
+  margin:     auto;
+}
+
+.main {
+  flex:       1;
+  width:      980px;
+  margin:     100px auto;
+  padding:    100px;
+  box-shadow: 0 0 4px gray;
+  position:   relative;
+}
+
+.success-message {
+  margin:      30px 0;
+  text-align:  center;
+}
+
+
+/******* フォームのinfoを非表示に *******/
+.info {
+  display: none;
+}
+
+/******* Todo *******/
+
+.todo-list {
+  padding: 0px;
+}
+
+.todo-card {
+  border-bottom:   1px solid rgb(56, 68, 77);
+  width:           100%;
+  padding:         5px;
+  display:         flex;
+  justify-content: space-between;
+}
+
+.todo-card__content {
+}
+
+.todo-card__head {
+  margin-top:  12px;
+  display:     flex;
+  align-items: center;
+}
+
+.todo-card__title {
+  font-size:   16px;
+  font-weight: bold;
+}
+
+.todo-card__body {
+  font-size: 12px;
+  margin:    12px 0px;
+}
+
+.todo-card__category {
+  font-size: 10px;
+  margin-left: 12px;
+  padding: 4px 8px;
+}
+
+.todo-card__state {
+  font-size: 10px;
+  margin-left: 12px;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.todo_state--wating {
+  background-color: pink;
+}
+
+.todo_state--inprogress {
+  background-color: yellowgreen;
+}
+
+.todo_state--completed {
+  background-color: silver;
+}
+
+.todo-card__buttons {
+  display:     flex;
+  align-items: flex-end;
+}
+
+.todo-card__buttons__edit {
+  margin-right: 8px;
+}
+
+.todo-card__buttons__remove {
+}
+
+.todo-detail {
+
+}
+
+.todo-detail__head {
+  margin-top:  12px;
+  display:     flex;
+  align-items: center;
+}
+
+.todo-detail__title {
+  font-size:   16px;
+  font-weight: bold;
+}
+
+.todo-detail__body {
+  font-size: 12px;
+  margin:    20px 0px;
+}
+
+.todo-detail__category {
+  font-size: 10px;
+  margin-left: 12px;
+  padding: 4px 8px;
+}
+
+.todo-detail__state {
+  font-size: 10px;
+  margin-left: 12px;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+/******* Todo Category *******/
+.todo-category-list {
+  padding: 0px;
+}
+
+.todo-category-card {
+  border-bottom:   1px solid rgb(56, 68, 77);
+  width:           100%;
+  padding:         5px;
+  display:         flex;
+  justify-content: space-between;
+}
+
+.todo-category-card__content {
+
+}
+
+.todo-category-card__buttons {
+  display:     flex;
+  align-items: flex-end;
+}
+
+.todo-category-card__buttons__edit {
+  margin-right: 8px;
+}
+
+.todo-category-card__buttons__remove {
+}
+
+.todo-category-card__content {
+  display: flex;
+}
+
+.todo-category-card__name {
+  font-size:   16px;
+  font-weight: bold;
+}
+
+.todo-card__category {
+  font-size:   12px;
+  font-weight: bold;
+  border-radius: 4px;
+}
+
+.todo-category-card__slug {
+  font-size:    14px;
+}
+
+.todo-category-card__color {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;/* ←円を作る */
+  margin-top: 4px;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.todo-category__color--red {
+  color: #FFF;
+  background-color: red;
+}
+
+.todo-category__color--green {
+  color: #FFF;
+  background-color: green;
+}
+
+.todo-category__color--blue {
+  color: #FFF;
+  background-color: blue;
+}
+
+.todo-category__color--yellow {
+  background-color: yellow;
+}
