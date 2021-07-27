@@ -11,9 +11,12 @@ import java.time.LocalDateTime
 // TODOを表すモデル
 //~~~~~~~~~~~~~~~~~~~~
 import Todo._
+//Point 以下、データ用にはcase classで、同じ名前のTodoのコンパニオンオブジェクト化されているところを上手く表現して使えているか？
 case class Todo(
+    //Point すごい細かいですが、弊社のインデントルールに沿って書いているか？を確認 インデント警察
     id:          Option[Id],
-    categoryId: TodoCategory.Id,
+    //Point Long型ではなく、「TodoCategory.Id」型で有ることを確認！ 
+    categoryId:  TodoCategory.Id,
     title:       String,
     body:        String,
     state:       Status,
@@ -39,6 +42,7 @@ object Todo {
   // 3:END     (完了)
   sealed abstract class Status(val code: Short, val name: String)
       extends EnumStatus
+  //Point EnumStatusを以下の様にちゃんと設定できているか？　※インデント警察もお願いします。
   object Status extends EnumStatus.Of[Status] {
     case object TODO     extends Status(code = 0, name = "着手前")
     case object PROGRESS extends Status(code = 1, name = "進行中")
@@ -47,6 +51,7 @@ object Todo {
 
   // INSERT時のIDがAutoincrementのため,IDなしであることを示すオブジェクトに変換
   def apply(
+      //Point ここも「TodoCategory.Id」型であることを確認
       categoryId:  TodoCategory.Id,
       title:       String,
       body:        String,

@@ -4,6 +4,8 @@
 # ~~~~
 
 # An example controller showing a sample home page
+#Point Formでの投げ先がPOSTになっていること
+#      URLに動的パラメータが必要な箇所を記載できていること「 :id 」「(id: Long)」
 GET     /                           controllers.HomeController.index
 GET     /todo                       controllers.TodoController.index
 GET     /todo/create                controllers.TodoController.create

@@ -20,6 +20,7 @@ case class TodoTable[P <: JdbcProfile]()(implicit val driver: P)
 
   // Definition of DataSourceName
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  //Point DBアクセスできない場合は、このto_doの辺りを確認
   lazy val dsn = Map(
     "master" -> DataSourceName("ixias.db.mysql://master/to_do"),
     "slave"  -> DataSourceName("ixias.db.mysql://slave/to_do")
@@ -32,7 +33,10 @@ case class TodoTable[P <: JdbcProfile]()(implicit val driver: P)
 
   // Definition of Table
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  //Point DBアクセスできない場合は、このto_doの辺りを確認
   class Table(tag: Tag) extends BasicTable(tag, "to_do") {
+    //Point カラム名があっていることを確認、
+    //      また、「TodoCategory.Id」がLongでないこと、「Status」などを確認
     import Todo._
     // Columns
     /* @1 */ def id         = column[Id]              ("id",          O.UInt64, O.PrimaryKey, O.AutoInc)
@@ -43,6 +47,7 @@ case class TodoTable[P <: JdbcProfile]()(implicit val driver: P)
     /* @6 */ def updatedAt  = column[LocalDateTime]   ("updated_at",  O.TsCurrent)
     /* @7 */ def createdAt  = column[LocalDateTime]   ("created_at",  O.Ts)
 
+    //Point 特に「TodoCategory.Id」「Status」などを確認
     type TableElementTuple = (
       Option[Id], TodoCategory.Id, String, String, Status, LocalDateTime, LocalDateTime
     )
@@ -54,6 +59,7 @@ case class TodoTable[P <: JdbcProfile]()(implicit val driver: P)
         t._1, t._2, t._3, t._4, t._5, t._6, t._7
       ),
       // Model => Tuple(table)
+      //Point 「LocalDateTime.now()」がupdatedAtの場所にあることを確認
       (v: TableElementType) => Todo.unapply(v).map { t => (
         t._1, t._2, t._3, t._4, t._5, LocalDateTime.now(), t._7
       )}

@@ -1,5 +1,7 @@
 package helpers
 
+//Point HTML内にロジックがある場合に、ヘルパーを作成してもいいかもとヒントを
+//      objectとして作っているか？などを確認
 object TodoCategoryHelper {
   import lib.model.TodoCategory._
 

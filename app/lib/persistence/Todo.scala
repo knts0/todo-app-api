@@ -64,6 +64,8 @@ case class TodoRepository[P <: JdbcProfile]()(implicit val driver: P)
 
   /** Delete Todo Data
     */
+  //Point カテゴリIDを指定して、マッチする複数のTodoレコードを消す場合の処理
+  //      
   def removeByCategoryId(categoryId: TodoCategory.Id): Future[TodoCategory.Id] =
     RunDBAction(TodoTable) { slick =>
       val row = slick.filter(_.categoryId === categoryId)

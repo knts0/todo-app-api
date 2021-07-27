@@ -14,6 +14,7 @@
     <button onclick="location.href='@controllers.routes.TodoCategoryController.create'">作成</button>
   </div>
   <div class="category">
+    <!-- //Point 一覧に分岐ロジックなどがないように確認、またColorなどの定義をこちらでmatchするような書き方もNG -->
     @for(category <- vv.categories) {
       <div class="category-list">
         <div class="category-list__name">
