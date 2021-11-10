@@ -10,7 +10,7 @@ case class JsValueTodoList(
 object JsValueTodoList {
   implicit val writes: Writes[JsValueTodoList] = Json.writes[JsValueTodoList]
 
-  def apply(seq: Seq[TodoList]): JsValueTodoList =
+  def apply(seq: Seq[TodoList], a: String = ""): JsValueTodoList =
     JsValueTodoList(
       todoList = seq.map(v => JsValueTodoListItem.apply(v))
     )

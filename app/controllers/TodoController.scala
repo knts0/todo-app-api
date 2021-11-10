@@ -4,17 +4,16 @@
 package controllers
 
 import javax.inject._
+import json.writes.JsValueTodoList
 import play.api.mvc._
 import play.api.data._
 import play.api.data.Forms._
 import play.api.data.validation.Constraints._
 import play.api.i18n.I18nSupport
-
-import model.view.ViewValueTodoList
 import model.view.ViewValueTodoCreate
 import model.view.ViewValueTodoEdit
 import model.ViewValueError
-
+import play.api.libs.json.Json
 import service.TodoService
 import service.TodoCategoryService
 
@@ -33,8 +32,8 @@ class TodoController @Inject() (val controllerComponents: ControllerComponents)
     for {
       todoList <- TodoService.all
     } yield {
-      val vv = ViewValueTodoList(todoList)
-      Ok(views.html.todo.List(vv))
+      val jsValue = JsValueTodoList.apply(todoList)
+      Ok(Json.toJson(jsValue))
     }
   }
 
