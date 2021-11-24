@@ -6,7 +6,7 @@ package controllers
 import json.reads.JsValueCreateTodo
 
 import javax.inject._
-import json.writes.JsValueTodoList
+import json.writes.{JsValueTodo, JsValueTodoCategoryItem, JsValueTodoList, JsValueTodoListItem}
 import play.api.mvc._
 import play.api.data._
 import play.api.i18n.I18nSupport
@@ -70,17 +70,11 @@ class TodoController @Inject() (val controllerComponents: ControllerComponents)
       categories <- TodoCategoryService.all
       todo <- TodoService.get(id)
     } yield {
-      val vv = ViewValueTodoEdit(categories, todo)
       Ok(
-        views.html.todo.Edit(
-          vv,
-          todoEditForm.fill(
-            TodoEdit(
-              title = todo.title,
-              body = todo.body,
-              state = todo.state.code,
-              categoryId = todo.categoryId
-            )
+        Json.toJson(
+          Json.obj(
+            "categories" -> categories.map(JsValueTodoCategoryItem.apply(_)),
+            "todo"       -> JsValueTodo.apply(todo)
           )
         )
       )
