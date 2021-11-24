@@ -4,19 +4,17 @@ import lib.model.Todo
 import lib.model.Todo._
 import lib.model.TodoCategory
 import lib.model.TodoCategory._
-
 import lib.persistence.onMySQL.TodoRepository
 import lib.persistence.onMySQL.TodoCategoryRepository
+
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
-
 import model.item.TodoList
 import model.item.TodoItem
 import model.item.TodoCategoryItem
-
 import ixias.persistence.SlickRepository
-
 import forms.TodoForm._
+import json.reads.JsValueCreateTodo
 
 object TodoService {
   def all(): Future[Seq[TodoList]] = {
@@ -51,7 +49,7 @@ object TodoService {
     }
   }
 
-  def add(form: TodoAdd): Future[Long] = {
+  def add(form: JsValueCreateTodo): Future[Long] = {
     TodoRepository.add(
       Todo(
         title = form.title,

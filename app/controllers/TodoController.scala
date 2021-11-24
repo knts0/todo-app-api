@@ -3,23 +3,23 @@
 
 package controllers
 
+import json.reads.JsValueCreateTodo
+
 import javax.inject._
 import json.writes.JsValueTodoList
 import play.api.mvc._
 import play.api.data._
-import play.api.data.Forms._
-import play.api.data.validation.Constraints._
 import play.api.i18n.I18nSupport
 import model.view.ViewValueTodoCreate
 import model.view.ViewValueTodoEdit
 import model.ViewValueError
 import play.api.libs.json.Json
+import play.api.libs.json._
 import service.TodoService
 import service.TodoCategoryService
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.util.Try
 
 @Singleton
 class TodoController @Inject() (val controllerComponents: ControllerComponents)
@@ -46,23 +46,20 @@ class TodoController @Inject() (val controllerComponents: ControllerComponents)
     }
   }
 
-  def save() = Action.async { implicit req =>
-    todoAddForm
-      .bindFromRequest()
+  def save() = Action(parse.json).async { implicit req =>
+    req.body
+      .validate[JsValueCreateTodo]
       .fold(
-        (formWithErrors: Form[TodoAdd]) => {
-          for {
-            categories <- TodoCategoryService.all
-          } yield {
-            val vv = ViewValueTodoCreate(categories)
-            BadRequest(views.html.todo.Create(vv, formWithErrors))
-          }
+        errors => {
+          Future.successful(
+            BadRequest(Json.obj("message" -> JsError.toJson(errors)))
+          )
         },
-        (todoData: TodoAdd) => {
+        todoData => {
           for {
             _ <- TodoService.add(todoData)
           } yield {
-            Redirect(routes.TodoController.index())
+            Ok(Json.obj("result" -> "OK!"))
           }
         }
       )
