@@ -4,18 +4,15 @@
 package controllers
 
 import javax.inject._
+import json.writes.JsValueTodoCategoryItem
 import play.api.mvc._
 import play.api.data._
-import play.api.data.Forms._
-import play.api.data.validation.Constraints._
 import play.api.i18n.I18nSupport
-
 import model.view.ViewValueCategoryList
 import model.view.ViewValueCategoryCreate
 import model.view.ViewValueCategoryEdit
 import model.ViewValueError
-
-import service.TodoService
+import play.api.libs.json.Json
 import service.TodoCategoryService
 
 import scala.concurrent.Future
@@ -49,7 +46,11 @@ class TodoCategoryController @Inject() (
       //Point 基本的には、ViewValue（のリスト化）で、HTMLにわたすデータを作成
       //      そのため、ViewValueは共通化できない部分は、それぞれの画面に合わせて作る必要がある。
       //　　　　以下のようなviewへのパラメータとしては、ViewValue系で１つ、下のcreateメソッドなどにもあるが、Formで1つというシンプルな状態になっているかを確認
-      Ok(views.html.category.List(vv))
+      Ok(
+        Json.toJson(
+          categories.map(JsValueTodoCategoryItem.apply(_))
+        )
+      )
     }
   }
 
