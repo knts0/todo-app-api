@@ -1,9 +1,7 @@
 package service
 
 import lib.model.Todo
-import lib.model.Todo._
 import lib.model.TodoCategory
-import lib.model.TodoCategory._
 import lib.persistence.onMySQL.TodoRepository
 import lib.persistence.onMySQL.TodoCategoryRepository
 
@@ -12,9 +10,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import model.item.TodoList
 import model.item.TodoItem
 import model.item.TodoCategoryItem
-import ixias.persistence.SlickRepository
-import forms.TodoForm._
-import json.reads.JsValueCreateTodo
+import json.reads.{JsValueCreateTodo, JsValueEditTodo}
 
 object TodoService {
   def all(): Future[Seq[TodoList]] = {
@@ -60,7 +56,7 @@ object TodoService {
     )
   }
 
-  def update(id: Long, form: TodoEdit): Future[Option[Long]] = {
+  def update(id: Long, jsValue: JsValueEditTodo): Future[Option[Long]] = {
     for {
       todoOpt <- TodoRepository.get(Todo.Id(id))
     } yield {
@@ -69,10 +65,10 @@ object TodoService {
           TodoRepository.update(
             new Todo.EmbeddedId(
               todo.v.copy(
-                title = form.title,
-                body = form.body,
-                categoryId = TodoCategory.Id(form.categoryId),
-                state = Todo.Status(form.state.toShort)
+                title      = jsValue.title,
+                body       = jsValue.body,
+                categoryId = TodoCategory.Id(jsValue.categoryId),
+                state      = Todo.Status(jsValue.state.toShort)
               )
             )
           )

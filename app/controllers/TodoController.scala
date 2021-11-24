@@ -3,15 +3,13 @@
 
 package controllers
 
-import json.reads.JsValueCreateTodo
+import json.reads.{JsValueCreateTodo, JsValueEditTodo}
 
 import javax.inject._
-import json.writes.{JsValueTodo, JsValueTodoCategoryItem, JsValueTodoList, JsValueTodoListItem}
+import json.writes.{JsValueTodo, JsValueTodoList}
 import play.api.mvc._
-import play.api.data._
 import play.api.i18n.I18nSupport
 import model.view.ViewValueTodoCreate
-import model.view.ViewValueTodoEdit
 import model.ViewValueError
 import play.api.libs.json.Json
 import play.api.libs.json._
@@ -80,31 +78,22 @@ class TodoController @Inject() (val controllerComponents: ControllerComponents)
     }
   }
 
-  def update(id: Long) = Action.async { implicit req =>
-    todoEditForm
-      .bindFromRequest()
+  def update(id: Long) = Action.async(parse.json) { implicit req =>
+    req.body
+      .validate[JsValueEditTodo]
       .fold(
-        (formWithErrors: Form[TodoEdit]) => {
-          for {
-            categories <- TodoCategoryService.all
-            todo <- TodoService.get(id)
-          } yield {
-            val vv = ViewValueTodoEdit(categories, todo)
-            Ok(
-              views.html.todo.Edit(
-                vv,
-                formWithErrors
-              )
-            )
-          }
+        errors => {
+          Future.successful(
+            BadRequest(Json.obj("message" -> JsError.toJson(errors)))
+          )
         },
-        (todoData: TodoEdit) =>
+        todoData =>
           (
             for {
               _ <- TodoService.update(id, todoData)
-            } yield Redirect(routes.TodoController.index())
+            } yield NoContent
           ) recover { case _: Exception =>
-            NotFound(views.html.error.page404(ViewValueError()))
+            NotFound
           }
       )
   }
