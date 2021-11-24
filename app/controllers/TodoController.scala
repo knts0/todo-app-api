@@ -67,15 +67,11 @@ class TodoController @Inject() (val controllerComponents: ControllerComponents)
 
   def edit(id: Long) = Action.async { implicit req =>
     (for {
-      categories <- TodoCategoryService.all
       todo <- TodoService.get(id)
     } yield {
       Ok(
         Json.toJson(
-          Json.obj(
-            "categories" -> categories.map(JsValueTodoCategoryItem.apply(_)),
-            "todo"       -> JsValueTodo.apply(todo)
-          )
+          JsValueTodo.apply(todo)
         )
       )
     }) recover { 
