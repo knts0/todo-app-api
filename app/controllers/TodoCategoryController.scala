@@ -8,7 +8,6 @@ import json.writes.JsValueTodoCategoryItem
 import play.api.mvc._
 import play.api.data._
 import play.api.i18n.I18nSupport
-import model.view.ViewValueCategoryList
 import model.view.ViewValueCategoryCreate
 import model.view.ViewValueCategoryEdit
 import model.ViewValueError
@@ -40,9 +39,6 @@ class TodoCategoryController @Inject() (
       //      newするものとしなくて良いものの違いを理解してもらう必要あり。
       categories <- TodoCategoryService.all
     } yield {
-      
-      val vv = ViewValueCategoryList(categories)
-      
       //Point 基本的には、ViewValue（のリスト化）で、HTMLにわたすデータを作成
       //      そのため、ViewValueは共通化できない部分は、それぞれの画面に合わせて作る必要がある。
       //　　　　以下のようなviewへのパラメータとしては、ViewValue系で１つ、下のcreateメソッドなどにもあるが、Formで1つというシンプルな状態になっているかを確認
