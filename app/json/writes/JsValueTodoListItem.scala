@@ -7,7 +7,7 @@ case class JsValueTodoListItem(
   id:       Long,
   title:    String,
   body:     String,
-  state:    Short,
+  state:    JsValueState,
   category: Option[JsValueTodoCategoryItem]
 )
 
@@ -19,7 +19,7 @@ object JsValueTodoListItem {
       id       = v.todo.id,
       title    = v.todo.title,
       body     = v.todo.body,
-      state    = v.todo.state.code,
+      state    = JsValueState.apply(v.todo.state),
       category = v.category.map(category => JsValueTodoCategoryItem.apply(category))
     )
 }
