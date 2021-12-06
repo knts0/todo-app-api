@@ -2,14 +2,14 @@ package service
 
 import lib.model.TodoCategory
 import lib.model.TodoCategory._
-
 import lib.persistence.onMySQL.TodoRepository
 import lib.persistence.onMySQL.TodoCategoryRepository
+
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
-
 import model.item.TodoCategoryItem
 import forms.TodoCategoryForm._
+import json.reads.JsValueCreateCategory
 
 object TodoCategoryService {
   def all(): Future[Seq[TodoCategoryItem]] = {
@@ -28,13 +28,13 @@ object TodoCategoryService {
     )
   }
 
-  def add(form: CategoryForm): Future[Long] = {
+  def add(jsValueCreateCategory: JsValueCreateCategory): Future[Long] = {
     TodoCategoryRepository.add(
       TodoCategory(
-        name = form.name,
-        slug = form.slug,
+        name = jsValueCreateCategory.name,
+        slug = jsValueCreateCategory.slug,
         //Point Formからの値を受ける段階で、「TodoCategory.Color」とかの型に受け渡していることを確認
-        color = TodoCategory.Color(form.color.toShort)
+        color = TodoCategory.Color(jsValueCreateCategory.color)
       )
     )
   }

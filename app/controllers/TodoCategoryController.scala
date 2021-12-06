@@ -3,6 +3,8 @@
 
 package controllers
 
+import json.reads.JsValueCreateCategory
+
 import javax.inject._
 import json.writes.JsValueTodoCategoryItem
 import play.api.mvc._
@@ -11,7 +13,7 @@ import play.api.i18n.I18nSupport
 import model.view.ViewValueCategoryCreate
 import model.view.ViewValueCategoryEdit
 import model.ViewValueError
-import play.api.libs.json.Json
+import play.api.libs.json.{JsError, Json}
 import service.TodoCategoryService
 
 import scala.concurrent.Future
@@ -57,24 +59,25 @@ class TodoCategoryController @Inject() (
     Ok(views.html.category.Create(vv, categoryForm))
   }
 
-  def save() = Action.async { implicit req =>
+  def save() = Action(parse.json).async { implicit req =>
     //Point この辺りのbindFormRequest()、エラー時、成功時の書き方を使いこなしているか？
     //      以下のドキュメントや、Playのドキュメントを読めているか？を確認する必要がある
     //      https://nextbeat-external.atlassian.net/wiki/spaces/DEVNEWEDU/pages/2737078458/4-2-0.+ToDo
-    categoryForm
-      .bindFromRequest()
+    req.body
+      .validate[JsValueCreateCategory]
       .fold(
-        (formWithErrors: Form[CategoryForm]) => {
-          val vv = ViewValueCategoryCreate()
-          Future.successful(Ok(views.html.category.Create(vv, formWithErrors)))
+        errors => {
+          Future.successful(
+            BadRequest(Json.obj("message" -> JsError.toJson(errors)))
+          )
         },
-        (categoryData: CategoryForm) => {
+        (categoryData: JsValueCreateCategory) => {
           for {
             //Point データ更新できているか？
             _ <- TodoCategoryService.add(categoryData)
           } yield {
-            //Point 成功時にリダイレクトしているか？
-            Redirect(routes.TodoCategoryController.index)
+            //Point Playオンリーの場合、ここでリダイレクトしていたが、Angular側で実施すること
+            Ok(Json.obj("result" -> "OK!"))
           }
         }
       )
