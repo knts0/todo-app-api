@@ -10,5 +10,4 @@ case class JsValueCreateTodo(
 
 object JsValueCreateTodo {
   implicit val reads: Reads[JsValueCreateTodo] = Json.reads[JsValueCreateTodo]
-
 }
