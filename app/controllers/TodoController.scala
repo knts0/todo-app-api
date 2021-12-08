@@ -101,9 +101,9 @@ class TodoController @Inject() (val controllerComponents: ControllerComponents)
   def delete(id: Long) = Action.async { implicit req =>
     (for {
       _ <- TodoService.delete(id)
-    } yield Redirect(routes.TodoController.index())) recover {
+    } yield NoContent) recover {
       case _: Exception =>
-        NotFound(views.html.error.page404(ViewValueError()))
+        NotFound
     }
   }
 }
