@@ -88,22 +88,14 @@ class TodoCategoryController @Inject() (
     (for {
       category <- TodoCategoryService.get(id)
     } yield {
-      val vv = ViewValueCategoryEdit(category)
       Ok(
-        views.html.category.Edit(
-          vv,
-          categoryForm.fill(
-            CategoryForm(
-              name = category.name,
-              slug = category.slug,
-              color = category.color.code
-            )
-          )
+        Json.toJson(
+          JsValueTodoCategoryItem.apply(category)
         )
       )
     }) recover { case _: Exception =>
       //Point 余裕のある人には、予期せぬ場合にどのような書き方があるか？などを質問してもよい。
-      NotFound(views.html.error.page404(ViewValueError()))
+      NotFound
     }
 
   }
