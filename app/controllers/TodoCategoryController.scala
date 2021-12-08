@@ -126,9 +126,9 @@ class TodoCategoryController @Inject() (
   def delete(id: Long) = Action.async { implicit req =>
     (for {
       _ <- TodoCategoryService.delete(id)
-    } yield Redirect(routes.TodoCategoryController.index)) recover {
+    } yield NoContent) recover {
       case _: Exception =>
-        NotFound(views.html.error.page404(ViewValueError()))
+        NotFound
     }
   }
 
