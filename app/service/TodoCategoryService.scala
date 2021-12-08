@@ -9,7 +9,7 @@ import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 import model.item.TodoCategoryItem
 import forms.TodoCategoryForm._
-import json.reads.JsValueCreateCategory
+import json.reads.{JsValueCreateCategory, JsValueUpdateCategory}
 
 object TodoCategoryService {
   def all(): Future[Seq[TodoCategoryItem]] = {
@@ -39,7 +39,7 @@ object TodoCategoryService {
     )
   }
 
-  def update(id: Long, form: CategoryForm): Future[Option[Long]] = {
+  def update(id: Long, jsValueUpdateCategory: JsValueUpdateCategory): Future[Option[Long]] = {
     for {
       categoryOpt <- TodoCategoryRepository.get(TodoCategory.Id(id))
     } yield {
@@ -49,9 +49,9 @@ object TodoCategoryService {
             new TodoCategory.EmbeddedId(
               //Point copyメソッドを活用して、さっくり作っていることを確認
               category.v.copy(
-                name = form.name,
-                slug = form.slug,
-                color = TodoCategory.Color(form.color.toShort)
+                name = jsValueUpdateCategory.name,
+                slug = jsValueUpdateCategory.slug,
+                color = TodoCategory.Color(jsValueUpdateCategory.color)
               )
             )
           )

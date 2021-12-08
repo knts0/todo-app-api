@@ -3,7 +3,7 @@
 
 package controllers
 
-import json.reads.JsValueCreateCategory
+import json.reads.{JsValueCreateCategory, JsValueUpdateCategory}
 
 import javax.inject._
 import json.writes.JsValueTodoCategoryItem
@@ -100,30 +100,24 @@ class TodoCategoryController @Inject() (
 
   }
 
-  def update(id: Long) = Action.async { implicit req =>
-    categoryForm
-      .bindFromRequest()
+  def update(id: Long) = Action(parse.json).async { implicit req =>
+    req.body
+      .validate[JsValueUpdateCategory]
       .fold(
-        (formWithErrors: Form[CategoryForm]) => {
-          for {
-            category <- TodoCategoryService.get(id)
-          } yield {
-            val vv = ViewValueCategoryEdit(category)
-            Ok(
-              views.html.category.Edit(
-                vv,
-                formWithErrors
-              )
-            )
-          }
+        errors => {
+          Future.successful(
+            BadRequest(Json.obj("message" -> JsError.toJson(errors)))
+          )
         },
-        (categoryData: CategoryForm) =>
+        (categoryData: JsValueUpdateCategory) =>
           (
             for {
               _ <- TodoCategoryService.update(id, categoryData)
-            } yield Redirect(routes.TodoCategoryController.index)
+            } yield
+              //Point Playオンリーの場合、ここでリダイレクトしていたが、Angular側で実施すること
+              Ok(Json.obj("result" -> "OK!"))
           ) recover { case _: Exception =>
-            NotFound(views.html.error.page404(ViewValueError()))
+            NotFound
           }
       )
 
